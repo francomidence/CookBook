@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Form from './Components/BasicSearch/Form';
+import NavBar from './Components/UI/NavBar';
+import axios from 'axios';
+import Recipes from './Components/BasicSearch/Recipes';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    apiKey: 'a22ee73466b242128615a87c1598ab5a',
+    recipeList: []
+  };
+
+  getRecipe = async e => {
+    const recipeName = e.target.elements.recipeName.value;
+    const cuisine = e.target.elements.cuisineSelect.value;
+    const diet = e.target.elements.dietSelect.value;
+    const intolerances = e.target.elements.intolerancesSelect.value;
+
+    console.log(cuisine);
+
+    e.preventDefault();
+
+    const res = await axios.get(
+      `https://api.spoonacular.com/recipes/search?apiKey=${this.state.apiKey}&query=${recipeName}&cuisine=${cuisine}&diet=${diet}&intolerances=${intolerances}`
+    );
+
+    const data = res.data['results'];
+
+    this.setState({ recipeList: data });
+
+    console.log(this.state.recipeList);
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <NavBar></NavBar>
+        <Form getRecipe={this.getRecipe} />
+        <Recipes recipes={this.state.recipeList} />
+      </div>
+    );
+  }
 }
 
 export default App;
