@@ -47,23 +47,21 @@ export default function SimpleSelect(props) {
   return (
     <form onSubmit={props.getRecipe}>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6} zeroMinWidth>
+        <Grid item xs={12} md={6} lg={3} zeroMinWidth>
           <Paper className={classes.paper}>
-            {' '}
-            <FormControl>
+            <FormControl className={classes.formControl}>
               <TextField
                 type="text"
                 id="recipeName"
-                label="E.g. 3 cheese pizza"
+                label="E.g. Pizza and press enter"
                 name="recipeName"
               ></TextField>
             </FormControl>
           </Paper>
         </Grid>
 
-        <Grid item xs={6} md={6} zeroMinWidth>
+        <Grid item xs={6} md={6} lg={3} zeroMinWidth>
           <Paper className={classes.paper}>
-            {' '}
             <FormControl className={classes.formControl}>
               <InputLabel id="selectRecipeLabel">Cuisine Type</InputLabel>
               <Select
@@ -84,9 +82,8 @@ export default function SimpleSelect(props) {
           </Paper>
         </Grid>
 
-        <Grid item xs={6} md={6} zeroMinWidth>
+        <Grid item xs={6} md={6} lg={3} zeroMinWidth>
           <Paper className={classes.paper}>
-            {' '}
             <FormControl className={classes.formControl}>
               <InputLabel id="selectDietLabel">Diet Type</InputLabel>
               <Select
@@ -105,9 +102,8 @@ export default function SimpleSelect(props) {
             </FormControl>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={6} zeroMinWidth>
+        <Grid item xs={12} md={6} lg={3} zeroMinWidth>
           <Paper className={classes.paper}>
-            {' '}
             <FormControl className={classes.formControl}>
               <InputLabel id="selectRecipeLabel">Intolerances</InputLabel>
               <Select

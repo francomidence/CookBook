@@ -29,7 +29,7 @@ export default function NavBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Link className={classes.link} to={{ pathname: `/` }}>
+          <Link className={classes.link} to={{ pathname: `/Home` }}>
             <IconButton
               edge="start"
               className={classes.menuButton}

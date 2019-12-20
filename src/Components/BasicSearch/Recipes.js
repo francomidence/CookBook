@@ -8,11 +8,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Visibility from '@material-ui/icons/Visibility';
 import Grid from '@material-ui/core/Grid';
+import Loader from '../UI/Loader';
+import NotFound from '../UI/NotFound';
 import '../../style/image.scss';
 
 const BASE_IMG_URL = 'https://spoonacular.com/recipeImages/';
@@ -42,20 +41,21 @@ const useStyles = makeStyles(theme => ({
 export default function Recipes(props) {
   const classes = useStyles();
 
+  if (props.recipes.length === 0 && props.call === true) {
+    return <NotFound></NotFound>;
+  }
+
+  if (props.fetching) {
+    return <Loader />;
+  } //justify center con grid
+
   return (
     <Grid container spacing={2}>
       {props.recipes.map(recipe => {
         return (
           <Grid item xs={12} md={3} zeroMinWidth>
             <Card key={recipe.id} className={classes.paper}>
-              <CardHeader
-                action={
-                  <IconButton aria-label="settings">
-                    <MoreVertIcon />
-                  </IconButton>
-                }
-                title={recipe.title}
-              />
+              <CardHeader title={recipe.title} />
 
               <CardMedia
                 className={classes.media}
@@ -71,12 +71,6 @@ export default function Recipes(props) {
               </CardContent>
 
               <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                  <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="share">
-                  <ShareIcon />
-                </IconButton>
                 <Link
                   to={{
                     pathname: `/recipe/${recipe.id}`,

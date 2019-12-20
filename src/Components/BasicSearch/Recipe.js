@@ -12,6 +12,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import NotFound from '../UI/Loader';
 import './Recipe.scss';
 
 class Recipe extends Component {
@@ -20,11 +21,14 @@ class Recipe extends Component {
     instructions: '',
     analyzedInstructions: [],
     data: '',
-    wines: []
+    wines: [],
+    fetching: false
   };
 
   componentDidMount = async () => {
     const id = this.props.location.state.recipeId;
+
+    this.setState({ fetching: true });
 
     const req = await axios.get(
       `https://api.spoonacular.com/recipes/${id}/information?apiKey=${this.state.apiKey}`
@@ -34,10 +38,17 @@ class Recipe extends Component {
     const analyzedInstructions = res.analyzedInstructions['0'].steps;
     const instructions = res.instructions;
 
-    this.setState({ instructions: instructions });
-    this.setState({ analyzedInstructions: analyzedInstructions });
-    this.setState({ data: res });
-    this.setState({ wines: res.winePairing.pairedWines });
+    this.setState({
+      instructions,
+      analyzedInstructions: analyzedInstructions,
+      data: res,
+      wines: res.winePairing.pairedWines,
+      fetching: false
+    });
+
+    if (Object.entries(res.winePairing).length === 0) {
+      console.log('its empty');
+    }
 
     console.log(this.state.data.image);
     console.log(analyzedInstructions);
@@ -46,6 +57,11 @@ class Recipe extends Component {
     const recipe = this.state.data;
     const wines = this.state.wines;
     const analyzedInstructions = this.state.analyzedInstructions;
+
+    if (this.state.fetching) {
+      return <NotFound />;
+    }
+
     return (
       <React.Fragment>
         <NavBar></NavBar>
@@ -69,6 +85,17 @@ class Recipe extends Component {
             <Typography className="h1" component="h3" variant="h3" gutterBottom>
               Recommended Wines
             </Typography>
+            <List component="nav" aria-label="main mailbox folders">
+              {wines.map(wine => (
+                <ListItem button>
+                  <ListItemIcon>
+                    <EmojiFoodBeverage />
+                  </ListItemIcon>
+                  <ListItemText primary={wine} />
+                </ListItem>
+              ))}
+            </List>
+
             <List component="nav" aria-label="main mailbox folders">
               {wines.map(wine => (
                 <ListItem button>

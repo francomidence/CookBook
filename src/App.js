@@ -8,7 +8,9 @@ import Recipes from './Components/BasicSearch/Recipes';
 class App extends Component {
   state = {
     apiKey: 'a22ee73466b242128615a87c1598ab5a',
-    recipeList: []
+    recipeList: [],
+    fetching: false,
+    called: false
   };
 
   getRecipe = async e => {
@@ -21,13 +23,15 @@ class App extends Component {
 
     e.preventDefault();
 
-    const res = await axios.get(
+    this.setState({ fetching: true });
+
+    const req = await axios.get(
       `https://api.spoonacular.com/recipes/search?apiKey=${this.state.apiKey}&query=${recipeName}&cuisine=${cuisine}&diet=${diet}&intolerances=${intolerances}`
     );
 
-    const data = res.data['results'];
+    const data = req.data['results'];
 
-    this.setState({ recipeList: data });
+    this.setState({ recipeList: data, fetching: false, called: true });
 
     console.log(this.state.recipeList);
   };
@@ -37,7 +41,11 @@ class App extends Component {
       <div className="App">
         <NavBar></NavBar>
         <Form getRecipe={this.getRecipe} />
-        <Recipes recipes={this.state.recipeList} />
+        <Recipes
+          fetching={this.state.fetching}
+          recipes={this.state.recipeList}
+          call={this.state.called}
+        />
       </div>
     );
   }
